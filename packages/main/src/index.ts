@@ -8,7 +8,7 @@ let mainWindow: BrowserWindow | null = null;
 let agentManager: AgentManager;
 
 function setupContentSecurityPolicy() {
-  const isDev = !app.isPackaged;
+  const isDev = !app.isPackaged && process.env.ELECTRON_IS_PACKAGED !== 'true';
 
   session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
     const csp = [
@@ -52,7 +52,8 @@ function createWindow() {
   });
 
   // In dev, load from Vite dev server; in prod, load the built file
-  const isDev = !app.isPackaged;
+  // Allow CI testing by checking ELECTRON_IS_PACKAGED env var
+  const isDev = !app.isPackaged && process.env.ELECTRON_IS_PACKAGED !== 'true';
   if (isDev) {
     mainWindow.loadURL('http://localhost:5173');
     mainWindow.webContents.openDevTools({ mode: 'detach' });
