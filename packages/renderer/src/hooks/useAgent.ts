@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { ConfigOption } from '@grimoire/shared';
+import type { AgentSession, ConfigOption } from '@grimoire/shared';
 import { useStore } from '../store';
 
 /**
@@ -24,10 +24,9 @@ export function useAgent() {
     setSessionList,
     addUserMessage,
     setStreaming,
-    setLoadingSession,
     setConfigOptions,
     setPendingPermission,
-    clearMessages,
+    switchToSession,
   } = useStore();
 
   /** Fetch the session list from the main process */
@@ -62,31 +61,23 @@ export function useAgent() {
   /** Create a new session on an already-connected agent */
   const createSession = useCallback(async (agentId: string, cwd?: string) => {
     try {
-      clearMessages();
       const resolvedCwd = cwd ?? await window.grimoire.invoke('app:get-cwd', undefined as void);
       const session = await window.grimoire.invoke('session:create', {
         agentId,
         cwd: resolvedCwd,
       });
-      setCurrentSession(session);
+      // switchToSession saves current messages to cache, then sets new (empty) session
+      switchToSession(session);
       fetchSessionList();
     } catch (err) {
       console.error('Failed to create session:', err);
     }
-  }, [clearMessages, setCurrentSession, fetchSessionList]);
+  }, [switchToSession, fetchSessionList]);
 
-  /** Load an existing session */
-  const loadSession = useCallback(async (sessionId: string, agentId: string, cwd: string) => {
-    try {
-      setLoadingSession(true);
-      clearMessages();
-      await window.grimoire.invoke('session:load', { agentId, sessionId, cwd });
-      setCurrentSession({ sessionId, agentId, cwd, createdAt: Date.now() });
-    } catch (err) {
-      console.error('Failed to load session:', err);
-      setLoadingSession(false);
-    }
-  }, [setLoadingSession, clearMessages, setCurrentSession]);
+  /** Switch to an existing session, restoring cached messages */
+  const switchSession = useCallback((session: AgentSession) => {
+    switchToSession(session);
+  }, [switchToSession]);
 
   /** Send a text prompt. Returns false if the message couldn't be sent. */
   const sendMessage = useCallback(async (text: string): Promise<boolean> => {
@@ -170,7 +161,7 @@ export function useAgent() {
     createSession,
     sendMessage,
     cancelPrompt,
-    loadSession,
+    switchSession,
     fetchSessionList,
     setConfigOption,
     respondToPermission,

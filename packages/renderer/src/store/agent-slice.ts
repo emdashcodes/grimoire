@@ -19,6 +19,7 @@ export interface AgentSlice {
   currentSession: AgentSession | null;
   sessionList: AgentSession[];
   messages: ConversationMessage[];
+  messageCache: Record<string, ConversationMessage[]>;
   isStreaming: boolean;
   isLoadingSession: boolean;
   currentPlan: PlanEntry[];
@@ -38,6 +39,7 @@ export interface AgentSlice {
   setSlashCommands: (commands: SlashCommand[]) => void;
   setPendingPermission: (request: PermissionRequest | null) => void;
   clearMessages: () => void;
+  switchToSession: (session: AgentSession) => void;
 }
 
 let messageCounter = 0;
@@ -47,6 +49,7 @@ export const createAgentSlice: StateCreator<AgentSlice> = (set, get) => ({
   currentSession: null,
   sessionList: [],
   messages: [],
+  messageCache: {},
   isStreaming: false,
   isLoadingSession: false,
   currentPlan: [],
@@ -198,4 +201,22 @@ export const createAgentSlice: StateCreator<AgentSlice> = (set, get) => ({
   setPendingPermission: (request) => set({ pendingPermission: request }),
 
   clearMessages: () => set({ messages: [], currentPlan: [], configOptions: [], slashCommands: [], pendingPermission: null }),
+
+  switchToSession: (session) => {
+    const { currentSession, messages, messageCache } = get();
+    // Save current session's messages to cache
+    const updatedCache = { ...messageCache };
+    if (currentSession) {
+      updatedCache[currentSession.sessionId] = messages;
+    }
+    // Restore target session's messages from cache (or empty)
+    const restored = updatedCache[session.sessionId] ?? [];
+    set({
+      currentSession: session,
+      messages: restored,
+      messageCache: updatedCache,
+      currentPlan: [],
+      pendingPermission: null,
+    });
+  },
 });

@@ -107,7 +107,7 @@ export function Sidebar() {
     agentStatus,
     connect,
     createSession,
-    loadSession,
+    switchSession,
     fetchSessionList,
   } = useAgent();
 
@@ -132,7 +132,7 @@ export function Sidebar() {
 
   const handleSessionClick = (session: AgentSession) => {
     if (session.sessionId === currentSession?.sessionId) return;
-    loadSession(session.sessionId, session.agentId, session.cwd);
+    switchSession(session);
   };
 
   return (
