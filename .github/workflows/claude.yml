@@ -34,7 +34,7 @@ jobs:
             libgtk-3-0 \
             libx11-xcb1 \
             libnss3 \
-            libasound2 \
+            libasound2t64 \
             libgbm1 \
             libxcomposite1 \
             libxdamage1 \
