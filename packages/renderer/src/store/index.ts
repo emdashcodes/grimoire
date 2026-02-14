@@ -8,3 +8,6 @@ export const useStore = create<AppStore>()((...args) => ({
   ...createAgentSlice(...args),
   ...createUiSlice(...args),
 }));
+
+// Expose store to window for dev/testing (always expose for now to enable CI testing)
+(window as any).__GRIMOIRE_STORE__ = useStore;
