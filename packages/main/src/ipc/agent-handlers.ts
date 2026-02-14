@@ -73,12 +73,7 @@ export function registerAgentHandlers(
   ipcMain.handle(
     IPC.SESSION_LOAD,
     async (_event, { agentId, sessionId, cwd }: { agentId: string; sessionId: string; cwd: string }) => {
-      try {
-        await agentManager.loadSession(agentId, sessionId, cwd);
-      } catch (err: any) {
-        console.error('[session:load] failed:', err?.message ?? err, JSON.stringify(err));
-        throw new Error(err?.message ?? String(err));
-      }
+      await agentManager.loadSession(agentId, sessionId, cwd);
       if (!win.isDestroyed()) {
         win.webContents.send(PUSH.SESSION_LOAD_DONE, { sessionId });
       }
