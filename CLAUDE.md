@@ -61,18 +61,23 @@ When running in GitHub Actions (CI=true), you can build and interactively test t
 
 1. Install dependencies: `npm ci`
 2. Build all packages: `npm run build`
-3. Launch Electron with CDP: `npx electron . --remote-debugging-port=9222 &`
-4. Wait for app to start: `sleep 3`
+3. Launch Electron with CDP: `ELECTRON_IS_PACKAGED=true DISPLAY=:99 npx electron . --remote-debugging-port=9222 --no-sandbox &`
+4. Wait for app to start: `sleep 5`
 5. Use Playwright MCP tools (`mcp__playwright__browser_snapshot`, etc.) to interact with and verify the app
 6. If you find issues, fix them, rebuild, and re-test
 
 The virtual display (Xvfb) is already running on :99. Playwright MCP connects to Electron via CDP on localhost:9222.
 
+**Environment variables:**
+- `ELECTRON_IS_PACKAGED=true` — Forces production mode (load built files instead of Vite dev server)
+- `DISPLAY=:99` — Uses the CI virtual display
+- `--no-sandbox` — Required for Electron in CI (security sandbox unavailable)
+
 To restart Electron after code changes:
 1. Kill the running instance: `pkill -f electron || true`
 2. Rebuild: `npm run build`
-3. Relaunch: `npx electron . --remote-debugging-port=9222 &`
-4. Wait: `sleep 3`
+3. Relaunch: `ELECTRON_IS_PACKAGED=true DISPLAY=:99 npx electron . --remote-debugging-port=9222 --no-sandbox &`
+4. Wait: `sleep 5`
 
 ### Attaching Screenshots to Issues/PRs
 
