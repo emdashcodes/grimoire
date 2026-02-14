@@ -1,0 +1,7 @@
+{
+  "enabledPlugins": {
+    "agent-delegation@ember": false,
+    "meta-skills@anthropics-skills": false,
+    "wordpress-plugin-scaffold@emdashcodes-wp-ability-toolkit": false
+  }
+}
