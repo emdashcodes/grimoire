@@ -1,0 +1,17 @@
+{
+  "name": "@grimoire/main",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "dependencies": {
+    "@agentclientprotocol/sdk": "^0.14.1",
+    "@grimoire/shared": "*"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.0"
+  }
+}

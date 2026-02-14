@@ -1,0 +1,33 @@
+{
+  "name": "grimoire",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Native desktop app for knowledge management and AI agent interaction",
+  "author": "Em <ember.shreve@gmail.com>",
+  "license": "MIT",
+  "main": "packages/main/dist/index.js",
+  "workspaces": [
+    "packages/shared",
+    "packages/main",
+    "packages/renderer"
+  ],
+  "scripts": {
+    "dev": "npm run build:shared && npm run build:main && concurrently -n main,renderer,electron \"npm run dev:main\" \"npm run dev:renderer\" \"npm run dev:electron\"",
+    "dev:main": "npm run dev -w packages/main",
+    "dev:renderer": "npm run dev -w packages/renderer",
+    "dev:electron": "sleep 2 && electron . --remote-debugging-port=9222",
+    "build": "npm run build:shared && npm run build:renderer && npm run build:main",
+    "build:shared": "npm run build -w packages/shared",
+    "build:main": "npm run build -w packages/main",
+    "build:renderer": "npm run build -w packages/renderer",
+    "start": "electron .",
+    "dist": "npm run build && electron-builder",
+    "typecheck": "tsc --build"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "electron": "^35.1.2",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.8.3"
+  }
+}

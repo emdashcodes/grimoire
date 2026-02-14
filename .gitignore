@@ -1,0 +1,12 @@
+node_modules/
+dist/
+out/
+*.tsbuildinfo
+.DS_Store
+*.swp
+*.swo
+.env
+.env.local
+.playwright-mcp/
+# Screenshots in root (session artifacts)
+/*.png

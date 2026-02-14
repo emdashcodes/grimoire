@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "composite": true,
+    "module": "ES2022",
+    "target": "ES2022"
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../shared" }
+  ]
+}

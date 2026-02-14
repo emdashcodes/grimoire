@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Dark theme (default — grimoire aesthetic) */
+  --grimoire-bg: #0a0a0f;
+  --grimoire-surface: #141419;
+  --grimoire-surface-hover: #1c1c24;
+  --grimoire-border: #2a2a35;
+  --grimoire-text: #e8e8ed;
+  --grimoire-text-muted: #8888a0;
+  --grimoire-accent: #9b6dff;
+  --grimoire-accent-hover: #b08aff;
+}
+
+.light {
+  --grimoire-bg: #fafafa;
+  --grimoire-surface: #ffffff;
+  --grimoire-surface-hover: #f0f0f5;
+  --grimoire-border: #e0e0e8;
+  --grimoire-text: #1a1a2e;
+  --grimoire-text-muted: #6b6b80;
+  --grimoire-accent: #7c3aed;
+  --grimoire-accent-hover: #6d28d9;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--grimoire-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--grimoire-text-muted);
+}
+
+/* Draggable title bar region */
+.drag-region {
+  -webkit-app-region: drag;
+}
+
+.no-drag {
+  -webkit-app-region: no-drag;
+}
+
+/* Markdown in chat */
+.chat-markdown pre {
+  @apply bg-grimoire-surface rounded-lg p-3 overflow-x-auto my-2;
+}
+
+.chat-markdown code {
+  @apply font-mono text-sm;
+}
+
+.chat-markdown p + p {
+  @apply mt-2;
+}
+
+.chat-markdown ul, .chat-markdown ol {
+  @apply ml-4 my-1;
+}
+
+.chat-markdown ul {
+  @apply list-disc;
+}
+
+.chat-markdown ol {
+  @apply list-decimal;
+}
+
+.chat-markdown a {
+  @apply text-grimoire-accent underline;
+}

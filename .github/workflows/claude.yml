@@ -1,0 +1,63 @@
+name: Claude
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+
+jobs:
+  claude:
+    if: contains(github.event.comment.body, '@claude')
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 20
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Electron system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            xvfb \
+            libgtk-3-0 \
+            libx11-xcb1 \
+            libnss3 \
+            libasound2 \
+            libgbm1 \
+            libxcomposite1 \
+            libxdamage1 \
+            libxrandr2 \
+            libxss1 \
+            libxtst6
+
+      - name: Start virtual display
+        run: |
+          Xvfb :99 -screen 0 1920x1080x24 &
+          echo "DISPLAY=:99" >> $GITHUB_ENV
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          trigger_phrase: "@claude"
+          settings: |
+            {
+              "env": {
+                "DISPLAY": ":99",
+                "CI": "true",
+                "ELECTRON_ENABLE_LOGGING": "1"
+              }
+            }
+          claude_args: |
+            --allowedTools "Bash(*),mcp__playwright__*,Edit,Read,Write,Glob,Grep,Task"
