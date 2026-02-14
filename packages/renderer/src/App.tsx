@@ -6,6 +6,7 @@ import { useAgentListeners } from '@/hooks/useAgentListeners';
 import { useStore } from '@/store';
 import type { SidebarMode } from '@/store/ui-slice';
 import { FolderOpen, CheckSquare, Calendar } from 'lucide-react';
+import { setupTestHelpers } from './test-helpers';
 
 function PlaceholderView({ mode }: { mode: SidebarMode }) {
   const icons = { vault: FolderOpen, tasks: CheckSquare, calendar: Calendar };
@@ -27,6 +28,9 @@ export function App() {
   // Register IPC listeners once at the app level
   useAgentListeners();
   const sidebarMode = useStore((s) => s.sidebarMode);
+
+  // Set up test helpers for CI testing
+  setupTestHelpers();
 
   return (
     <div className="flex flex-col h-screen">

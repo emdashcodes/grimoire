@@ -14,6 +14,7 @@ This project has documentation skills in `.claude/skills/`. **ALWAYS activate th
 - **electron-js** — Electron APIs, IPC, BrowserWindow, process model, packaging. Use when working on the main process, preload scripts, window management, native features.
 - **shadcn-ui** — shadcn/ui components, Radix primitives, Tailwind patterns. Use when building UI components, forms, dialogs, dropdowns.
 - **interface-design** — Design principles, craft-focused UI critique. Use when designing layouts, reviewing visual quality, building the theme system.
+- **ci-testing** — CI testing with Playwright MCP. Use when testing the Electron app in GitHub Actions, injecting test messages, verifying UI behavior, or debugging headless Electron.
 
 ## Development Workflow: Agent Teams
 
