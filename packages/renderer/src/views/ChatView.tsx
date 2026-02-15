@@ -9,7 +9,7 @@ import { PlanPanel } from '@/components/chat/PlanPanel';
 import { PermissionDialog } from '@/components/chat/PermissionDialog';
 
 export function ChatView() {
-  const { messages, currentPlan } = useStore();
+  const { messages, currentPlan, workingFolder, setWorkingFolder } = useStore();
   const {
     agentStatus,
     currentSession,
@@ -104,6 +104,8 @@ export function ChatView() {
         isStreaming={isStreaming}
         disabled={!connected || !currentSession}
         slashCommands={slashCommands}
+        workingFolder={workingFolder}
+        onFolderSelect={setWorkingFolder}
       />
 
       {/* Permission dialog (modal overlay) */}

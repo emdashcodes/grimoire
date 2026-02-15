@@ -26,6 +26,7 @@ export interface AgentSlice {
   configOptions: ConfigOption[];
   slashCommands: SlashCommand[];
   pendingPermission: PermissionRequest | null;
+  workingFolder: string | null;
 
   // Actions
   setAgentStatus: (status: AgentStatus) => void;
@@ -38,6 +39,7 @@ export interface AgentSlice {
   setConfigOptions: (options: ConfigOption[]) => void;
   setSlashCommands: (commands: SlashCommand[]) => void;
   setPendingPermission: (request: PermissionRequest | null) => void;
+  setWorkingFolder: (path: string | null) => void;
   clearMessages: () => void;
   switchToSession: (session: AgentSession) => void;
 }
@@ -56,6 +58,7 @@ export const createAgentSlice: StateCreator<AgentSlice> = (set, get) => ({
   configOptions: [],
   slashCommands: [],
   pendingPermission: null,
+  workingFolder: null,
 
   setAgentStatus: (status) => set({ agentStatus: status }),
 
@@ -199,6 +202,8 @@ export const createAgentSlice: StateCreator<AgentSlice> = (set, get) => ({
   setSlashCommands: (commands) => set({ slashCommands: commands }),
 
   setPendingPermission: (request) => set({ pendingPermission: request }),
+
+  setWorkingFolder: (path) => set({ workingFolder: path }),
 
   clearMessages: () => set({ messages: [], currentPlan: [], configOptions: [], slashCommands: [], pendingPermission: null }),
 

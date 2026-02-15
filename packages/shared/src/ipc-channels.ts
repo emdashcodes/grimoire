@@ -41,6 +41,9 @@ export const IPC = {
   // App utilities
   APP_GET_CWD: 'app:get-cwd',
 
+  // Dialog
+  DIALOG_OPEN_FOLDER: 'dialog:open-folder',
+
   // Window controls
   WINDOW_MINIMIZE: 'window:minimize',
   WINDOW_MAXIMIZE: 'window:maximize',
@@ -91,6 +94,8 @@ export interface InvokeMap {
   };
 
   [IPC.APP_GET_CWD]: { args: void; result: string };
+
+  [IPC.DIALOG_OPEN_FOLDER]: { args: void; result: string | null };
 
   [IPC.WINDOW_MINIMIZE]: { args: void; result: void };
   [IPC.WINDOW_MAXIMIZE]: { args: void; result: void };
