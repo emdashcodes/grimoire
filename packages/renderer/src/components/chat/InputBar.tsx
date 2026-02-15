@@ -1,5 +1,5 @@
 import { useState, useRef, useCallback, useMemo } from 'react';
-import { Send, Square } from 'lucide-react';
+import { Send, Square, Folder, X } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import { SlashPalette } from './SlashPalette';
 import type { SlashCommand } from '@grimoire/shared';
@@ -10,9 +10,11 @@ interface Props {
   isStreaming: boolean;
   disabled: boolean;
   slashCommands: SlashCommand[];
+  workingFolder: string | null;
+  onFolderSelect: (path: string | null) => void;
 }
 
-export function InputBar({ onSend, onCancel, isStreaming, disabled, slashCommands }: Props) {
+export function InputBar({ onSend, onCancel, isStreaming, disabled, slashCommands, workingFolder, onFolderSelect }: Props) {
   const [text, setText] = useState('');
   const [showSlashPalette, setShowSlashPalette] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -91,9 +93,57 @@ export function InputBar({ onSend, onCancel, isStreaming, disabled, slashCommand
     el.style.height = Math.min(el.scrollHeight, 200) + 'px';
   };
 
+  const handleFolderClick = useCallback(async () => {
+    const path = await window.grimoire.invoke('dialog:open-folder');
+    if (path) {
+      onFolderSelect(path);
+    }
+  }, [onFolderSelect]);
+
+  const handleClearFolder = useCallback(() => {
+    onFolderSelect(null);
+  }, [onFolderSelect]);
+
+  const getFolderName = (path: string) => {
+    const segments = path.split('/');
+    return segments[segments.length - 1] || path;
+  };
+
   return (
     <div className="border-t border-grimoire-border bg-grimoire-surface/80 backdrop-blur-sm p-3">
-      <div className="relative flex items-end gap-2 max-w-3xl mx-auto">
+      <div className="relative max-w-3xl mx-auto">
+        {/* Folder selector */}
+        {workingFolder ? (
+          <div className="flex items-center gap-2 mb-2">
+            <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs bg-grimoire-surface border border-grimoire-border">
+              <Folder size={12} className="text-grimoire-text-muted" />
+              <span className="text-grimoire-text">{getFolderName(workingFolder)}</span>
+              <button
+                onClick={handleClearFolder}
+                className="ml-1 text-grimoire-text-muted hover:text-grimoire-text transition-colors"
+                title="Clear folder"
+              >
+                <X size={12} />
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 mb-2">
+            <button
+              onClick={handleFolderClick}
+              className={cn(
+                'flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs',
+                'text-grimoire-text-muted hover:text-grimoire-text',
+                'hover:bg-grimoire-surface transition-colors',
+              )}
+            >
+              <Folder size={12} />
+              <span>Work in a folder</span>
+            </button>
+          </div>
+        )}
+
+      <div className="relative flex items-end gap-2">
         {/* Slash command palette */}
         <SlashPalette
           commands={slashCommands}
@@ -145,6 +195,7 @@ export function InputBar({ onSend, onCancel, isStreaming, disabled, slashCommand
             <Send size={18} />
           </button>
         )}
+      </div>
       </div>
     </div>
   );

@@ -19,6 +19,7 @@ export function useAgent() {
     configOptions,
     slashCommands,
     pendingPermission,
+    workingFolder,
     setAgentStatus,
     setCurrentSession,
     setSessionList,
@@ -44,7 +45,7 @@ export function useAgent() {
     try {
       setAgentStatus('connecting');
       await window.grimoire.invoke('agent:initialize', { agentId: 'claude-code' });
-      const resolvedCwd = cwd ?? await window.grimoire.invoke('app:get-cwd', undefined as void);
+      const resolvedCwd = cwd ?? workingFolder ?? await window.grimoire.invoke('app:get-cwd', undefined as void);
       const session = await window.grimoire.invoke('session:create', {
         agentId: 'claude-code',
         cwd: resolvedCwd,
@@ -56,12 +57,12 @@ export function useAgent() {
       console.error('Failed to connect agent:', err);
       setAgentStatus('error');
     }
-  }, [setAgentStatus, setCurrentSession, fetchSessionList]);
+  }, [setAgentStatus, setCurrentSession, fetchSessionList, workingFolder]);
 
   /** Create a new session on an already-connected agent */
   const createSession = useCallback(async (agentId: string, cwd?: string) => {
     try {
-      const resolvedCwd = cwd ?? await window.grimoire.invoke('app:get-cwd', undefined as void);
+      const resolvedCwd = cwd ?? workingFolder ?? await window.grimoire.invoke('app:get-cwd', undefined as void);
       const session = await window.grimoire.invoke('session:create', {
         agentId,
         cwd: resolvedCwd,
@@ -72,7 +73,7 @@ export function useAgent() {
     } catch (err) {
       console.error('Failed to create session:', err);
     }
-  }, [switchToSession, fetchSessionList]);
+  }, [switchToSession, fetchSessionList, workingFolder]);
 
   /** Switch to an existing session, restoring cached messages */
   const switchSession = useCallback((session: AgentSession) => {
