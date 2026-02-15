@@ -42,11 +42,6 @@ jobs:
             libxss1 \
             libxtst6
 
-      - name: Install gh-attach for screenshot uploads
-        run: gh extension install atani/gh-attach
-        env:
-          GH_TOKEN: ${{ github.token }}
-
       - name: Start virtual display
         run: |
           Xvfb :99 -screen 0 1920x1080x24 &

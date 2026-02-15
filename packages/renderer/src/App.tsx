@@ -1,6 +1,7 @@
 import { TitleBar } from '@/components/layout/TitleBar';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { StatusBar } from '@/components/layout/StatusBar';
+import { ContextPanel } from '@/components/layout/ContextPanel';
 import { ChatView } from '@/views/ChatView';
 import { useAgentListeners } from '@/hooks/useAgentListeners';
 import { useStore } from '@/store';
@@ -27,6 +28,7 @@ export function App() {
   // Register IPC listeners once at the app level
   useAgentListeners();
   const sidebarMode = useStore((s) => s.sidebarMode);
+  const contextPanelVisible = useStore((s) => s.contextPanelVisible);
 
   return (
     <div className="flex flex-col h-screen">
@@ -40,6 +42,8 @@ export function App() {
         ) : (
           <PlaceholderView mode={sidebarMode} />
         )}
+
+        {contextPanelVisible && sidebarMode === 'chat' && <ContextPanel />}
       </div>
 
       <StatusBar />
