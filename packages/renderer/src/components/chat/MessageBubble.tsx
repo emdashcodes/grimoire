@@ -4,17 +4,50 @@ import { User, Bot } from 'lucide-react';
 import { cn } from '@/lib/cn';
 import type { ConversationMessage } from '@grimoire/shared';
 import { ToolCallCard } from './ToolCallCard';
+import { ThinkingBlock } from './ThinkingBlock';
 
 interface Props {
   message: ConversationMessage;
 }
 
+interface ParsedContent {
+  thinkingBlocks: string[];
+  regularText: string;
+}
+
+/**
+ * Parse thinking blocks from agent message text.
+ * Returns thinking blocks separately from regular text.
+ */
+function parseThinkingBlocks(text: string): ParsedContent {
+  const thinkingRegex = /<thinking>([\s\S]*?)<\/thinking>/g;
+  const thinkingBlocks: string[] = [];
+  let match: RegExpExecArray | null;
+
+  // Extract all thinking blocks
+  while ((match = thinkingRegex.exec(text)) !== null) {
+    thinkingBlocks.push(match[1].trim());
+  }
+
+  // Remove thinking blocks from regular text
+  const regularText = text.replace(thinkingRegex, '').trim();
+
+  return { thinkingBlocks, regularText };
+}
+
 export function MessageBubble({ message }: Props) {
   const isUser = message.role === 'user';
-  const textContent = message.content
+  const rawTextContent = message.content
     .filter((c) => c.type === 'text')
     .map((c) => (c as { type: 'text'; text: string }).text)
     .join('');
+
+  // Parse thinking blocks for agent messages
+  const { thinkingBlocks, regularText } = isUser
+    ? { thinkingBlocks: [], regularText: rawTextContent }
+    : parseThinkingBlocks(rawTextContent);
+
+  const textContent = regularText;
 
   return (
     <div className={cn('flex gap-3 py-3', isUser ? 'flex-row-reverse' : 'flex-row')}>
@@ -30,6 +63,15 @@ export function MessageBubble({ message }: Props) {
 
       {/* Content */}
       <div className={cn('flex-1 min-w-0', isUser ? 'text-right' : 'text-left')}>
+        {/* Thinking blocks (agent only, rendered before regular text) */}
+        {!isUser && thinkingBlocks.length > 0 && (
+          <div className="max-w-[85%]">
+            {thinkingBlocks.map((thinking, idx) => (
+              <ThinkingBlock key={idx} content={thinking} />
+            ))}
+          </div>
+        )}
+
         {textContent && (
           <div
             className={cn(
