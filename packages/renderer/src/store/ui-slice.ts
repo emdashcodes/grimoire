@@ -15,7 +15,7 @@ export interface UiSlice {
 export const createUiSlice: StateCreator<UiSlice> = (set) => ({
   sidebarMode: 'chat',
   sidebarCollapsed: false,
-  contextPanelVisible: false,
+  contextPanelVisible: true,
 
   setSidebarMode: (mode) => set({ sidebarMode: mode }),
   toggleSidebar: () => set((s) => ({ sidebarCollapsed: !s.sidebarCollapsed })),

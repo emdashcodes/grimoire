@@ -1,6 +1,12 @@
+import { PanelRightClose, PanelRightOpen } from 'lucide-react';
 import { cn } from '@/lib/cn';
+import { useStore } from '@/store';
 
 export function TitleBar() {
+  const contextPanelVisible = useStore((s) => s.contextPanelVisible);
+  const toggleContextPanel = useStore((s) => s.toggleContextPanel);
+  const sidebarMode = useStore((s) => s.sidebarMode);
+
   return (
     <div
       className={cn(
@@ -17,7 +23,21 @@ export function TitleBar() {
         </h1>
       </div>
 
-      <div className="w-20" />
+      <div className="w-20 flex items-center justify-end">
+        {sidebarMode === 'chat' && (
+          <button
+            onClick={toggleContextPanel}
+            className="no-drag p-1.5 rounded hover:bg-grimoire-surface-hover transition-colors text-grimoire-text-muted hover:text-grimoire-text"
+            title={contextPanelVisible ? 'Hide context panel' : 'Show context panel'}
+          >
+            {contextPanelVisible ? (
+              <PanelRightClose size={16} />
+            ) : (
+              <PanelRightOpen size={16} />
+            )}
+          </button>
+        )}
+      </div>
     </div>
   );
 }
