@@ -131,12 +131,10 @@ export function InputBar({ onSend, onCancel, isStreaming, disabled, slashCommand
           <div className="flex items-center gap-2 mb-2">
             <button
               onClick={handleFolderClick}
-              disabled={disabled}
               className={cn(
                 'flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs',
                 'text-grimoire-text-muted hover:text-grimoire-text',
                 'hover:bg-grimoire-surface transition-colors',
-                disabled && 'opacity-50 cursor-not-allowed'
               )}
             >
               <Folder size={12} />
