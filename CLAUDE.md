@@ -79,24 +79,6 @@ To restart Electron after code changes:
 3. Relaunch: `ELECTRON_IS_PACKAGED=true DISPLAY=:99 npx electron . --remote-debugging-port=9222 --no-sandbox &`
 4. Wait: `sleep 5`
 
-### Attaching Screenshots to Issues/PRs
-
-Use `gh attach` to upload screenshots from Playwright MCP to GitHub comments:
-
-```bash
-# Take a screenshot with Playwright MCP (browser_take_screenshot tool)
-# Then upload it to the current issue/PR:
-gh attach --issue <NUMBER> --image ./screenshot.png --release --repo $GITHUB_REPOSITORY --body "Description of what the screenshot shows"
-
-# Multiple screenshots:
-gh attach --issue <NUMBER> --release --repo $GITHUB_REPOSITORY \
-  --image ./before.png \
-  --image ./after.png \
-  --body 'Before: <!-- gh-attach:IMAGE:1 -->
-After: <!-- gh-attach:IMAGE:2 -->'
-```
-
-Always attach screenshots when reporting visual findings — show what the app looks like after your changes.
 
 ## Git
 
